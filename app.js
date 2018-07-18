@@ -6,6 +6,9 @@ var app = express();
 const port = process.env.PORT || 8080;
 const ip = process.env.IP || 'localhost';
 
+console.log("port:" + port);
+console.log("ip:" + ip);
+
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
 
