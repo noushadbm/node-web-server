@@ -21,6 +21,6 @@ app.get('/', function(req, resp){
   });
 });
 
-app.listen(port, ip, function(){
+app.listen(port, function(){
   console.log("Server started");
 });
