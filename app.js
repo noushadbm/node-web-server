@@ -3,6 +3,9 @@ var hbs = require('hbs');
 
 var app = express();
 
+const port = process.env.PORT || 8080;
+const ip = process.env.IP || 'localhost';
+
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
 
@@ -15,6 +18,6 @@ app.get('/', function(req, resp){
   });
 });
 
-app.listen(8080, '192.168.0.116', function(){
+app.listen(port, ip, function(){
   console.log("Server started");
 });
