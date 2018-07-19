@@ -9,15 +9,10 @@ MongoClient.connect('mongodb://127.0.0.1:27017', {useNewUrlParser: true},(err, c
 
   console.log('Connected to mongo db');
   const db = client.db('app-testdb');
-  db.collection('ToDos').insertOne({
-    text : 'Walk the dog',
-    completed : false
-  },(err, result)=>{
-    if(err){
-      return console.log('Error inserting record.');
-    }
-
-    console.log(JSON.stringify(result.ops, undefined, 2));
+  db.collection('ToDos').find({completed: false}).toArray().then((docs) => {
+    console.log(JSON.stringify(docs, undefined, 2));
+  }, (err) => {
+    console.log('Unable to fetch the data');
   });
 
   client.close();
