@@ -100,6 +100,20 @@ app.patch('/todos/:id', (req, res)=>{
   });
 });
 
+// ADD user
+app.post('/users', (req, res)=>{
+  var body = _.pick(req.body, ['email','password']);
+  var user = new User(body);
+  user.save().then((user)=>{
+    //res.send(user);
+    return user.generateAuthToken();
+  }).then((token)=>{
+    res.header('x-auth', token).send(user);
+  }).catch((err)=>{
+    res.status(400).send(err.message);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Servar started with port ${port}`);
 });

@@ -10,12 +10,17 @@ var ToDo = mongoose.model('ToDo', {
 });
 
 var newTodo = new ToDo({
-  text: 'Cook Breakfast',
+  text: 'Double save test2',
   completed: false
 });
 
-newTodo.save().then((doc)=>{
-  console.log(doc);
+newTodo.save().then((todo)=>{
+  console.log('First call...' + todo);
+  todo.completed = true;
+  todo.save().then((second)=>{
+    console.log('Second call...' + second);
+  });
+
 },(err)=>{
   console.log('Failed to save.', err);
 });
