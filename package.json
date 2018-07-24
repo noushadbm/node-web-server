@@ -8,7 +8,7 @@
     "clean:dist": "rm -rf dist",
     "clean:tmp": "rm -rf tmp",
     "clean": "npm run clean:dist && npm run clean:tmp",
-    "start": "node app.js"
+    "start": "node server/server.js"
   },
   "author": "noushad",
   "license": "ISC",
