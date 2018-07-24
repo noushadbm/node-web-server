@@ -24,6 +24,14 @@ app.post('/todos', (req, res) => {
   });
 });
 
+app.get('/todos', (req, res) => {
+  ToDo.find().then((todos)=>{
+    res.send({todos});
+  }, (err)=>{
+    res.status(400).send({error: err.message});
+  });
+});
+
 app.listen(port, () => {
   console.log(`Servar started with port ${port}`);
 });
