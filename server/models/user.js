@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 
 var UserSchema = new mongoose.Schema({
   email : {
@@ -69,6 +70,56 @@ UserSchema.statics.findByToken = function(token){
     '_id': decoded._id,
     'tokens.token' : token,
     'tokens.access' : 'auth'
+  });
+};
+
+//This will be called before the model is saved to db
+UserSchema.pre('save',function (next){
+  var user = this;
+  if(user.isModified('password')){
+    bcrypt.genSalt(10, (err, salt)=>{
+      //console.log('-----Breakpoint 1');
+      if(err){
+        console.log(err);
+      }
+      bcrypt.hash(user.password, salt, (err, hash)=>{
+        if(err){
+          console.log(err);
+        }
+        user.password = hash;
+        //console.log('--continue---');
+        next();
+      });
+    });
+  } else {
+    next();
+  }
+});
+
+UserSchema.statics.findByCredentials = function(email, password) {
+  //var User = this;
+  console.log('findByCredentials called.');
+  return User.findOne({email})
+  .then((user)=>{
+    console.log("User in DB:" + user);
+    if(!user){
+      return Promise.reject('User not found.');
+    }
+
+    return new Promise((resolve, reject)=>{
+      console.log('Checking password.');
+      console.log("password:" + password);
+      console.log("user.password:" + user.password);
+      bcrypt.compare(password, user.password, (err, result)=>{
+        console.log("result:" + result);
+        if(result){
+          // Promise need to return user object to handle it in server.js
+          resolve(user);
+        } else {
+          reject('Invalid credentials.');
+        }
+      });
+    });
   });
 }
 
