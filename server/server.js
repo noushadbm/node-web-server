@@ -138,6 +138,15 @@ app.get('/users/me', authenticate, (req, res)=>{
     res.send(req.user);
 });
 
+app.delete('/users/me/token',authenticate, (req, res)=>{
+  // in 'authenticate' method user and token is set to request
+  req.user.removeToken(req.token).then(()=>{
+    res.status(200).send();
+  }).catch((err)=>{
+    res.status(400).send();
+  });
+});
+
 app.listen(port, () => {
   console.log(`Servar started with port ${port}`);
 });

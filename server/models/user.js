@@ -53,6 +53,20 @@ UserSchema.methods.generateAuthToken = function() {
   });
 }
 
+UserSchema.methods.removeToken = function(tokenInReq) {
+  var user = this;
+
+  // return as Promise, that will be handled in server.js
+  return user.update({
+    $pull:{
+      tokens: {
+        //token: tokenInReq
+        access: 'auth'
+      }
+    }
+  });
+}
+
 UserSchema.statics.findByToken = function(token){
   var User = this;
   var decoded;
