@@ -1,11 +1,12 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
+const _ = require('lodash');
 
-var {mongoose} = require('./db/mongoose');
-var {ToDo} = require('./models/todo');
-var {User} = require('./models/user');
-var ObjectId = mongoose.Types.ObjectId;
+const {mongoose} = require('./db/mongoose');
+const {ToDo} = require('./models/todo');
+const {User} = require('./models/user');
+const {authenticate} = require('./middleware/authenticate');
+const ObjectId = mongoose.Types.ObjectId;
 
 var port = process.env.PORT || 3000;
 
@@ -112,6 +113,14 @@ app.post('/users', (req, res)=>{
   }).catch((err)=>{
     res.status(400).send(err.message);
   });
+});
+
+
+
+// Get user from token
+app.get('/users/me', authenticate, (req, res)=>{
+    // request will come here from middleware
+    res.send(req.user);
 });
 
 app.listen(port, () => {
