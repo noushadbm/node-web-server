@@ -1,3 +1,15 @@
+var env = process.env.NODE_ENV || 'dev'
+
+if(env === 'dev'){
+  process.env.PORT = 3000;
+  process.env.MONGO_URL = 'mongodb://127.0.0.1:27017/app-devdb';
+} else if(env === 'test'){
+  process.env.PORT = 3000;
+  process.env.MONGO_URL = 'mongodb://127.0.0.1:27017/app-testdb';
+}
+
+console.log('env *****', env);
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
@@ -8,7 +20,7 @@ const {User} = require('./models/user');
 const {authenticate} = require('./middleware/authenticate');
 const ObjectId = mongoose.Types.ObjectId;
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT;
 
 var app = express();
 app.use(bodyParser.json());
@@ -19,10 +31,10 @@ app.post('/todos', (req, res) => {
   });
 
   todo.save().then((doc)=>{
-    console.log(doc);
+    //console.log(doc);
     res.send(doc);
   }, (err)=> {
-    console.log(err);
+    //console.log(err);
     res.status(400).send({error: err.message});
   });
 });
@@ -47,7 +59,7 @@ app.get('/todos/:id', (req, res) => {
       return res.status(404).send();
     }
 
-    res.send(todo);
+    res.send({todo});
   }, (err)=>{
     res.status(400).send(err.message);
   });
@@ -66,7 +78,7 @@ app.delete('/todos/:id', (req, res)=>{
       return res.status(404).send();
     }
 
-    res.send(todo);
+    res.send({todo});
   })
   .catch((err)=>{
     res.status(400).send(err.message);
@@ -94,6 +106,7 @@ app.patch('/todos/:id', (req, res)=>{
       return res.status(404).send();
     }
 
+    //console.log("returning...." + {todo});
     res.send({todo});
   })
   .catch((e)=>{
@@ -127,7 +140,7 @@ app.post('/users/login', (req, res)=>{
     });
   })
   .catch((err)=>{
-    console.log('Failed');
+    //console.log('Failed');
     res.status(401).send();
   });
 });
@@ -150,3 +163,6 @@ app.delete('/users/me/token',authenticate, (req, res)=>{
 app.listen(port, () => {
   console.log(`Servar started with port ${port}`);
 });
+
+// The following line is for test case execution
+module.exports = {app}

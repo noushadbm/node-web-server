@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "export NODE_ENV=test || set \"NODE_ENV=test\" && mocha --exit server/**/*.test.js",
     "clean:dist": "rm -rf dist",
     "clean:tmp": "rm -rf tmp",
     "clean": "npm run clean:dist && npm run clean:tmp",
@@ -22,5 +22,11 @@
     "mongodb": "^3.1.1",
     "mongoose": "^5.2.4",
     "validator": "^10.4.0"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "leaked-handles": "^5.2.0",
+    "mocha": "^5.2.0",
+    "supertest": "^3.1.0"
   }
 }
